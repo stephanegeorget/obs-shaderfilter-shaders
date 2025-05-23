@@ -5,7 +5,7 @@
 // Happily vibe-coded with ChatGPT
 // I could not keep all the parameters exactly the same as in the original
 // shader because my CPU could not handle it, so I tweaked the details threshold.
-// [SGEORGET20250523113358]
+// [SGEORGET20250523162740]
 
 
 sampler_state textureSampler {
