@@ -1,8 +1,7 @@
 // fractal 1
-// From Yohei Nishitsuji
+// Inspired from Yohei Nishitsuji
 // https://x.com/YoheiNishitsuji/status/1923362809569837131
-// for(float i,g,e,s;++i<99.;){vec3 p=vec3((FC.xy-.5*r)/r.y*4.+vec2(0,1),g-6.)*rotate3D(3.,vec3(0,9,-3));p.xz*=rotate2D(t*.3);s=6.;for(int i;i++<12;p=vec3(0,4.03,-1)-abs(abs(p)*e-vec3(3,4,3)))s*=e=7.5/dot(p,p*.47);g+=p.y*p.y/s*.3;s=log2(s)-g*.8;o.rgb+=hsv(.5,.1,s/7e2);}
-// Inspired from the above but I could not get the main fractal ball in the middle, not sure what I missed.
+// Then happily vibe-coded with ChatGPT
 // [SGEORGET20250526001345]
 
 
@@ -36,13 +35,13 @@ uniform float _014_ParamB<
 > = 13;
 
 uniform float _014_ParamC<
-  string label = "Offset (4.5)";
+  string label = "Offset (7)";
   string widget_type = "slider";
   string group = "Adjustments";
   float minimum = -22;
   float maximum = 22;
   float step = 0.1;
-> = 4.5;
+> = 7;
 
 
 
