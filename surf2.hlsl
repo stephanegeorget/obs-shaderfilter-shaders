@@ -23,6 +23,29 @@ uniform float _019_Speed<
 > = 0.2;
 
 
+uniform int _019_Iterations< 
+  string label = "Iterations (100)";
+  string widget_type = "slider";
+  string group = "Adjustments";
+  int minimum = 1;
+  int maximum = 120;
+  int step = 1;
+> = 100;
+
+
+
+uniform int _019_Turbulence< 
+  string label = "Iterations (7)";
+  string widget_type = "slider";
+  string group = "Adjustments";
+  int minimum = 1;
+  int maximum = 12;
+  int step = 1;
+> = 7;
+
+
+
+
 // Required for OBS ShaderFilter
 sampler_state textureSampler
 {
@@ -54,19 +77,21 @@ float4 mainImage(VertData v_in) : TARGET
     // Original GLSL: vec3 p = z * normalize(FC.rgb * 2. - r.xyx);
     // In HLSL we don't have FC.rgb, so we approximate using UV coordinates and center-relative position
     // This vector is fixed per pixel, not per iteration, but still approximates the GLSL behavior
-    float3 dir = normalize(float3(v_in.uv * 2.0 - 1.0, -1.0)); // viewing direction from UV (centered)
+    float2 uv = v_in.uv * (-2.0) + 1.0; // viewing direction from UV (centered). Flip y direction when porting from Twigl to OBS ShaderFilter
+    uv.x /= uv_size.y / uv_size.x; // maintain 1:1 aspect
+    float3 dir = normalize(float3(uv, 2.0));
 
     // Original GLSL: z is uninitialized and updated in the loop: z += d = ...
     // In HLSL, uninitialized means 0, which causes degenerate output. A small non-zero init fixes it.
     // Original GLSL: z is uninitialized and updated in the loop: z += d = ...
     // In HLSL, uninitialized means exactly 0.0, which leads to degenerate output:
-    // - p = z * dir becomes zero → all trigonometric distortion vanishes
+    // - p = z * dir becomes zero -> all trigonometric distortion vanishes
     // - d becomes near-zero or undefined, causing either division artifacts or black screen
     // A small positive init (e.g. 0.01) kicks off meaningful displacement and allows the loop to evolve
     float z = 0.01;
 
     // Raymarching loop
-    for (float i = 1.0; i <= 100.0; i++)
+    for (float i = 1.0; i <= _019_Iterations; i++)
     {
 
         float3 p = z * dir; // compute point along ray
@@ -80,7 +105,7 @@ float4 mainImage(VertData v_in) : TARGET
 
         float d = 0.0;
         // Add wave-like displacement to p
-        for (float j = 1.0; j < 9.0; j++)
+        for (float j = 1.0; j < _019_Turbulence; j++)
         {
             p += sin(p.yzx * j - t + 0.2 * i) / j;
         }
